@@ -1,0 +1,1920 @@
+from kivy.app import App
+from kivy.uix.label import Label
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.textinput import TextInput
+from kivy.uix.scrollview import ScrollView
+from kivy.uix.button import Button
+from kivy.uix.dropdown import DropDown
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.popup import Popup
+import shodan
+from kivy.uix.image import Image
+import matplotlib.pyplot as plt1
+import folium
+from selenium import webdriver
+import time
+import numpy as np
+
+SHODAN_API_KEY = "YOUR_API_KEY"
+api = shodan.Shodan(SHODAN_API_KEY)
+
+dicprotocol = api.protocols()
+protocol = [k for k in dicprotocol]
+vprotocol = [v for v in dicprotocol.values()]
+port = api.ports()
+dicservice = api.services()
+service = [k for k in dicservice]
+vservice = [v for v in dicservice.values()]
+
+
+def paises(lista):
+    paises_res = []
+    for pais in lista:
+        if pais == 'AD':
+            paises_res.append('Andorra')
+        elif pais == 'AE':
+            paises_res.append('United Arab Emirates')
+        elif pais == 'AF':
+            paises_res.append('Afghanistan')
+        elif pais == 'AG':
+            paises_res.append('Antigua and Barbuda')
+        elif pais == 'AI':
+            paises_res.append('Anguilla')
+        elif pais == 'AL':
+            paises_res.append('Albania')
+        elif pais == 'AM':
+            paises_res.append('Armenia')
+        elif pais == 'AN':
+            paises_res.append('Netherlands Antilles')
+        elif pais == 'AO':
+            paises_res.append('Angola')
+        elif pais == 'AQ':
+            paises_res.append('Antarctica')
+        elif pais == 'AR':
+            paises_res.append('Argentina')
+        elif pais == 'AS':
+            paises_res.append('American Samoa')
+        elif pais == 'AT':
+            paises_res.append('Austria')
+        elif pais == 'AU':
+            paises_res.append('Australia')
+        elif pais == 'AW':
+            paises_res.append('Aruba')
+        elif pais == 'AZ':
+            paises_res.append('Azerbaijan')
+        elif pais == 'BA':
+            paises_res.append('Bosnia and Herzegovina')
+        elif pais == 'BB':
+            paises_res.append('Barbados')
+        elif pais == 'BD':
+            paises_res.append('Bangladesh')
+        elif pais == 'BE':
+            paises_res.append('Belgium')
+        elif pais == 'BF':
+            paises_res.append('Burkina Faso')
+        elif pais == 'BG':
+            paises_res.append('Bulgaria')
+        elif pais == 'BH':
+            paises_res.append('Bahrain')
+        elif pais == 'BI':
+            paises_res.append('Burundi')
+        elif pais == 'BJ':
+            paises_res.append('Benin')
+        elif pais == 'BM':
+            paises_res.append('Bermuda')
+        elif pais == 'BN':
+            paises_res.append('Brunei')
+        elif pais == 'BO':
+            paises_res.append('Bolivia')
+        elif pais == 'BR':
+            paises_res.append('Brazil')
+        elif pais == 'BS':
+            paises_res.append('Bahamas')
+        elif pais == 'BT':
+            paises_res.append('Bhutan')
+        elif pais == 'BV':
+            paises_res.append('Bouvet Island')
+        elif pais == 'BW':
+            paises_res.append('Botswana')
+        elif pais == 'BY':
+            paises_res.append('Belarus')
+        elif pais == 'BZ':
+            paises_res.append('Belize')
+        elif pais == 'CA':
+            paises_res.append('Canada')
+        elif pais == 'CC':
+            paises_res.append('Cocos [Keeling] Islands')
+        elif pais == 'CD':
+            paises_res.append('Congo [DRC]')
+        elif pais == 'CF':
+            paises_res.append('Central African Republic')
+        elif pais == 'CG':
+            paises_res.append('Congo [Republic]')
+        elif pais == 'CH':
+            paises_res.append('Switzerland')
+        elif pais == 'CI':
+            paises_res.append("CÙte d'Ivoire")
+        elif pais == 'CK':
+            paises_res.append('Cook Islands')
+        elif pais == 'CL':
+            paises_res.append('Chile')
+        elif pais == 'CM':
+            paises_res.append('Cameroon')
+        elif pais == 'CN':
+            paises_res.append('China')
+        elif pais == 'CO':
+            paises_res.append('Colombia')
+        elif pais == 'CR':
+            paises_res.append('Costa Rica')
+        elif pais == 'CU':
+            paises_res.append('Cuba')
+        elif pais == 'CV':
+            paises_res.append('Cape Verde')
+        elif pais == 'CX':
+            paises_res.append('Christmas Island')
+        elif pais == 'CY':
+            paises_res.append('Cyprus')
+        elif pais == 'CZ':
+            paises_res.append('Czech Republic')
+        elif pais == 'DE':
+            paises_res.append('Germany')
+        elif pais == 'DJ':
+            paises_res.append('Djibouti')
+        elif pais == 'DK':
+            paises_res.append('Denmark')
+        elif pais == 'DM':
+            paises_res.append('Dominica')
+        elif pais == 'DO':
+            paises_res.append('Dominican Republic')
+        elif pais == 'DZ':
+            paises_res.append('Algeria')
+        elif pais == 'EC':
+            paises_res.append('Ecuador')
+        elif pais == 'EE':
+            paises_res.append('Estonia')
+        elif pais == 'EG':
+            paises_res.append('Egypt')
+        elif pais == 'EH':
+            paises_res.append('Western Sahara')
+        elif pais == 'ER':
+            paises_res.append('Eritrea')
+        elif pais == 'ES':
+            paises_res.append('Spain')
+        elif pais == 'ET':
+            paises_res.append('Ethiopia')
+        elif pais == 'FI':
+            paises_res.append('Finland')
+        elif pais == 'FJ':
+            paises_res.append('Fiji')
+        elif pais == 'FK':
+            paises_res.append('Falkland Islands [Islas Malvinas]')
+        elif pais == 'FM':
+            paises_res.append('Micronesia')
+        elif pais == 'FO':
+            paises_res.append('Faroe Islands')
+        elif pais == 'FR':
+            paises_res.append('France')
+        elif pais == 'GA':
+            paises_res.append('Gabon')
+        elif pais == 'GB':
+            paises_res.append('United Kingdom')
+        elif pais == 'GD':
+            paises_res.append('Grenada')
+        elif pais == 'GE':
+            paises_res.append('Georgia')
+        elif pais == 'GF':
+            paises_res.append('French Guiana')
+        elif pais == 'GG':
+            paises_res.append('Guernsey')
+        elif pais == 'GH':
+            paises_res.append('Ghana')
+        elif pais == 'GI':
+            paises_res.append('Gibraltar')
+        elif pais == 'GL':
+            paises_res.append('Greenland')
+        elif pais == 'GM':
+            paises_res.append('Gambia')
+        elif pais == 'GN':
+            paises_res.append('Guinea')
+        elif pais == 'GP':
+            paises_res.append('Guadeloupe')
+        elif pais == 'GQ':
+            paises_res.append('Equatorial Guinea')
+        elif pais == 'GR':
+            paises_res.append('Greece')
+        elif pais == 'GS':
+            paises_res.append('South Georgia and the South Sandwich Islands')
+        elif pais == 'GT':
+            paises_res.append('Guatemala')
+        elif pais == 'GU':
+            paises_res.append('Guam')
+        elif pais == 'GW':
+            paises_res.append('Guinea-Bissau')
+        elif pais == 'GY':
+            paises_res.append('Guyana')
+        elif pais == 'GZ':
+            paises_res.append('Gaza Strip')
+        elif pais == 'HK':
+            paises_res.append('Hong Kong')
+        elif pais == 'HM':
+            paises_res.append('Heard Island and McDonald Islands')
+        elif pais == 'HN':
+            paises_res.append('Honduras')
+        elif pais == 'HR':
+            paises_res.append('Croatia')
+        elif pais == 'HT':
+            paises_res.append('Haiti')
+        elif pais == 'HU':
+            paises_res.append('Hungary')
+        elif pais == 'ID':
+            paises_res.append('Indonesia')
+        elif pais == 'IE':
+            paises_res.append('Ireland')
+        elif pais == 'IL':
+            paises_res.append('Israel')
+        elif pais == 'IM':
+            paises_res.append('Isle of Man')
+        elif pais == 'IN':
+            paises_res.append('India')
+        elif pais == 'IO':
+            paises_res.append('British Indian Ocean Territory')
+        elif pais == 'IQ':
+            paises_res.append('Iraq')
+        elif pais == 'IR':
+            paises_res.append('Iran')
+        elif pais == 'IS':
+            paises_res.append('Iceland')
+        elif pais == 'IT':
+            paises_res.append('Italy')
+        elif pais == 'JE':
+            paises_res.append('Jersey')
+        elif pais == 'JM':
+            paises_res.append('Jamaica')
+        elif pais == 'JO':
+            paises_res.append('Jordan')
+        elif pais == 'JP':
+            paises_res.append('Japan')
+        elif pais == 'KE':
+            paises_res.append('Kenya')
+        elif pais == 'KG':
+            paises_res.append('Kyrgyzstan')
+        elif pais == 'KH':
+            paises_res.append('Cambodia')
+        elif pais == 'KI':
+            paises_res.append('Kiribati')
+        elif pais == 'KM':
+            paises_res.append('Comoros')
+        elif pais == 'KN':
+            paises_res.append('Saint Kitts and Nevis')
+        elif pais == 'KP':
+            paises_res.append('North Korea')
+        elif pais == 'KR':
+            paises_res.append('South Korea')
+        elif pais == 'KW':
+            paises_res.append('Kuwait')
+        elif pais == 'KY':
+            paises_res.append('Cayman Islands')
+        elif pais == 'KZ':
+            paises_res.append('Kazakhstan')
+        elif pais == 'LA':
+            paises_res.append('Laos')
+        elif pais == 'LB':
+            paises_res.append('Lebanon')
+        elif pais == 'LC':
+            paises_res.append('Saint Lucia')
+        elif pais == 'LI':
+            paises_res.append('Liechtenstein')
+        elif pais == 'LK':
+            paises_res.append('Sri Lanka')
+        elif pais == 'LR':
+            paises_res.append('Liberia')
+        elif pais == 'LS':
+            paises_res.append('Lesotho')
+        elif pais == 'LT':
+            paises_res.append('Lithuania')
+        elif pais == 'LU':
+            paises_res.append('Luxembourg')
+        elif pais == 'LV':
+            paises_res.append('Latvia')
+        elif pais == 'LY':
+            paises_res.append('Libya')
+        elif pais == 'MA':
+            paises_res.append('Morocco')
+        elif pais == 'MC':
+            paises_res.append('Monaco')
+        elif pais == 'MD':
+            paises_res.append('Moldova')
+        elif pais == 'ME':
+            paises_res.append('Montenegro')
+        elif pais == 'MG':
+            paises_res.append('Madagascar')
+        elif pais == 'MH':
+            paises_res.append('Marshall Islands')
+        elif pais == 'MK':
+            paises_res.append('Macedonia')
+        elif pais == 'ML':
+            paises_res.append('Mali')
+        elif pais == 'MM':
+            paises_res.append('Myanmar')
+        elif pais == 'MN':
+            paises_res.append('Mongolia')
+        elif pais == 'MO':
+            paises_res.append('Macau')
+        elif pais == 'MP':
+            paises_res.append('Northern Mariana Islands')
+        elif pais == 'MQ':
+            paises_res.append('Martinique')
+        elif pais == 'MR':
+            paises_res.append('Mauritania')
+        elif pais == 'MS':
+            paises_res.append('Montserrat')
+        elif pais == 'MT':
+            paises_res.append('Malta')
+        elif pais == 'MU':
+            paises_res.append('Mauritius')
+        elif pais == 'MV':
+            paises_res.append('Maldives')
+        elif pais == 'MW':
+            paises_res.append('Malawi')
+        elif pais == 'MX':
+            paises_res.append('Mexico')
+        elif pais == 'MY':
+            paises_res.append('Malaysia')
+        elif pais == 'MZ':
+            paises_res.append('Mozambique')
+        elif pais == 'NA':
+            paises_res.append('Namibia')
+        elif pais == 'NC':
+            paises_res.append('New Caledonia')
+        elif pais == 'NE':
+            paises_res.append('Niger')
+        elif pais == 'NF':
+            paises_res.append('Norfolk Island')
+        elif pais == 'NG':
+            paises_res.append('Nigeria')
+        elif pais == 'NI':
+            paises_res.append('Nicaragua')
+        elif pais == 'NL':
+            paises_res.append('Netherlands')
+        elif pais == 'NO':
+            paises_res.append('Norway')
+        elif pais == 'NP':
+            paises_res.append('Nepal')
+        elif pais == 'NR':
+            paises_res.append('Nauru')
+        elif pais == 'NU':
+            paises_res.append('Niue')
+        elif pais == 'NZ':
+            paises_res.append('New Zealand')
+        elif pais == 'OM':
+            paises_res.append('Oman')
+        elif pais == 'PA':
+            paises_res.append('Panama')
+        elif pais == 'PE':
+            paises_res.append('Peru')
+        elif pais == 'PF':
+            paises_res.append('French Polynesia')
+        elif pais == 'PG':
+            paises_res.append('Papua New Guinea')
+        elif pais == 'PH':
+            paises_res.append('Philippines')
+        elif pais == 'PK':
+            paises_res.append('Pakistan')
+        elif pais == 'PL':
+            paises_res.append('Poland')
+        elif pais == 'PM':
+            paises_res.append('Saint Pierre and Miquelon')
+        elif pais == 'PN':
+            paises_res.append('Pitcairn Islands')
+        elif pais == 'PR':
+            paises_res.append('Puerto Rico')
+        elif pais == 'PS':
+            paises_res.append('Palestinian Territories')
+        elif pais == 'PT':
+            paises_res.append('Portugal')
+        elif pais == 'PW':
+            paises_res.append('Palau')
+        elif pais == 'PY':
+            paises_res.append('Paraguay')
+        elif pais == 'QA':
+            paises_res.append('Qatar')
+        elif pais == 'RE':
+            paises_res.append('RÈunion')
+        elif pais == 'RO':
+            paises_res.append('Romania')
+        elif pais == 'RS':
+            paises_res.append('Serbia')
+        elif pais == 'RU':
+            paises_res.append('Russia')
+        elif pais == 'RW':
+            paises_res.append('Rwanda')
+        elif pais == 'SA':
+            paises_res.append('Saudi Arabia')
+        elif pais == 'SB':
+            paises_res.append('Saudi Arabia')
+        elif pais == 'SC':
+            paises_res.append('Seychelles')
+        elif pais == 'SD':
+            paises_res.append('Sudan')
+        elif pais == 'SE':
+            paises_res.append('Sweden')
+        elif pais == 'SG':
+            paises_res.append('Singapore')
+        elif pais == 'SH':
+            paises_res.append('Saint Helena')
+        elif pais == 'SI':
+            paises_res.append('Slovenia')
+        elif pais == 'SJ':
+            paises_res.append('Svalbard and Jan Mayen')
+        elif pais == 'SK':
+            paises_res.append('Slovakia')
+        elif pais == 'SL':
+            paises_res.append('Sierra Leone')
+        elif pais == 'SM':
+            paises_res.append('San Marino')
+        elif pais == 'SN':
+            paises_res.append('Senegal')
+        elif pais == 'SR':
+            paises_res.append('Somalia')
+        elif pais == 'ST':
+            paises_res.append('Suriname')
+        elif pais == 'SV':
+            paises_res.append('S„o TomÈ and PrÌncipe')
+        elif pais == 'SY':
+            paises_res.append('El Salvador')
+        elif pais == 'SZ':
+            paises_res.append('Syria')
+        elif pais == 'TC':
+            paises_res.append('Turks and Caicos Islands')
+        elif pais == 'TD':
+            paises_res.append('Chad')
+        elif pais == 'TF':
+            paises_res.append('French Southern Territories')
+        elif pais == 'TG':
+            paises_res.append('Togo')
+        elif pais == 'TH':
+            paises_res.append('Thailand')
+        elif pais == 'TJ':
+            paises_res.append('Tajikistan')
+        elif pais == 'TK':
+            paises_res.append('Tokelau')
+        elif pais == 'TL':
+            paises_res.append('Timor-Leste')
+        elif pais == 'TM':
+            paises_res.append('Turkmenistan')
+        elif pais == 'TN':
+            paises_res.append('Tunisia')
+        elif pais == 'TO':
+            paises_res.append('Tonga')
+        elif pais == 'TR':
+            paises_res.append('Tonga')
+        elif pais == 'TT':
+            paises_res.append('Trinidad and Tobago')
+        elif pais == 'TV':
+            paises_res.append('Tuvalu')
+        elif pais == 'TW':
+            paises_res.append('Taiwan')
+        elif pais == 'TZ':
+            paises_res.append('Tanzania')
+        elif pais == 'UA':
+            paises_res.append('Ukraine')
+        elif pais == 'UG':
+            paises_res.append('Uganda')
+        elif pais == 'US':
+            paises_res.append('United States')
+        elif pais == 'UY':
+            paises_res.append('Uruguay')
+        elif pais == 'UZ':
+            paises_res.append('Uzbekistan')
+        elif pais == 'VA':
+            paises_res.append('Vatican City')
+        elif pais == 'VC':
+            paises_res.append('Saint Vincent and the Grenadines')
+        elif pais == 'VE':
+            paises_res.append('Venezuela')
+        elif pais == 'VG':
+            paises_res.append('British Virgin Islands')
+        elif pais == 'VI':
+            paises_res.append('U.S. Virgin Islands')
+        elif pais == 'VN':
+            paises_res.append('Vietnam')
+        elif pais == 'VU':
+            paises_res.append('Vanuatu')
+        elif pais == 'WF':
+            paises_res.append('Wallis and Futuna')
+        elif pais == 'WS':
+            paises_res.append('Samoa')
+        elif pais == 'XK':
+            paises_res.append('Kosovo')
+        elif pais == 'YE':
+            paises_res.append('Yemen')
+        elif pais == 'YT':
+            paises_res.append('Mayotte')
+        elif pais == 'ZA':
+            paises_res.append('South Africa')
+        elif pais == 'ZM':
+            paises_res.append('Zambia')
+        elif pais == 'ZW':
+            paises_res.append('Zimbabwe')
+        else:
+            paises_res.append('None')
+    return paises_res
+
+
+def coordenadas(pais):
+    if pais == 'AD':
+        return [42.546245, 1.601554]
+    elif pais == 'AE':
+        return [23.424076, 53.847818]
+    elif pais == 'AF':
+        return [33.93911, 67.709953]
+    elif pais == 'AG':
+        return [17.060816, -61.796428]
+    elif pais == 'AI':
+        return [18.220554, -63.068615]
+    elif pais == 'AL':
+        return [41.153332, 20.168331]
+    elif pais == 'AM':
+        return [40.069099, 45.038189]
+    elif pais == 'AN':
+        return [12.226079, -69.060087]
+    elif pais == 'AO':
+        return [-11.202692, 17.873887]
+    elif pais == 'AQ':
+        return [-75.250973, -0.071389]
+    elif pais == 'AR':
+        return [-38.416097, -63.616672]
+    elif pais == 'AS':
+        return [-14.270972, -170.132217]
+    elif pais == 'AT':
+        return [47.516231, 14.550072]
+    elif pais == 'AU':
+        return [-25.274398, 133.775136]
+    elif pais == 'AW':
+        return [12.52111, -69.968338]
+    elif pais == 'AZ':
+        return [40.143105, 47.576927]
+    elif pais == 'BA':
+        return [43.915886, 17.679076]
+    elif pais == 'BB':
+        return [13.193887, -59.543198]
+    elif pais == 'BD':
+        return [23.684994, 90.356331]
+    elif pais == 'BE':
+        return [50.503887, 4.469936]
+    elif pais == 'BF':
+        return [12.238333, -1.561593]
+    elif pais == 'BG':
+        return [42.733883, 25.48583]
+    elif pais == 'BH':
+        return [25.930414, 50.637772]
+    elif pais == 'BI':
+        return [-3.373056, 29.918886]
+    elif pais == 'BJ':
+        return [9.30769, 2.315834]
+    elif pais == 'BM':
+        return [32.321384, -64.75737]
+    elif pais == 'BN':
+        return [4.535277, 114.727669]
+    elif pais == 'BO':
+        return [-16.290154, -63.588653]
+    elif pais == 'BR':
+        return [-14.235004, -51.92528]
+    elif pais == 'BS':
+        return [25.03428, -77.39628]
+    elif pais == 'BT':
+        return [27.514162, 90.433601]
+    elif pais == 'BV':
+        return [-54.423199, 3.413194]
+    elif pais == 'BW':
+        return [-22.328474, 24.684866]
+    elif pais == 'BY':
+        return [53.709807, 27.953389]
+    elif pais == 'BZ':
+        return [17.189877, -88.49765]
+    elif pais == 'CA':
+        return [56.130366, -106.346771]
+    elif pais == 'CC':
+        return [-12.164165, 96.870956]
+    elif pais == 'CD':
+        return [-4.038333, 21.758664]
+    elif pais == 'CF':
+        return [6.611111, 20.939444]
+    elif pais == 'CG':
+        return [-0.228021, 15.827659]
+    elif pais == 'CH':
+        return [46.818188, 8.227512]
+    elif pais == 'CI':
+        return [7.539989, -5.54708]
+    elif pais == 'CK':
+        return [-21.236736, -159.777671]
+    elif pais == 'CL':
+        return [-35.675147, -71.542969]
+    elif pais == 'CM':
+        return [7.369722, 12.354722]
+    elif pais == 'CN':
+        return [35.86166, 104.195397]
+    elif pais == 'CO':
+        return [4.570868, -74.297333]
+    elif pais == 'CR':
+        return [9.748917, -83.753428]
+    elif pais == 'CU':
+        return [21.521757, -77.781167]
+    elif pais == 'CV':
+        return [16.002082, -24.013197]
+    elif pais == 'CX':
+        return [-10.447525, 105.690449]
+    elif pais == 'CY':
+        return [35.126413, 33.429859]
+    elif pais == 'CZ':
+        return [49.817492, 15.472962]
+    elif pais == 'DE':
+        return [51.165691, 10.451526]
+    elif pais == 'DJ':
+        return [11.825138, 42.590275]
+    elif pais == 'DK':
+        return [56.26392, 9.501785]
+    elif pais == 'DM':
+        return [15.414999, -61.370976]
+    elif pais == 'DO':
+        return [18.735693, -70.162651]
+    elif pais == 'DZ':
+        return [28.033886, 1.659626]
+    elif pais == 'EC':
+        return [-1.831239, -78.183406]
+    elif pais == 'EE':
+        return [58.595272, 25.013607]
+    elif pais == 'EG':
+        return [26.820553, 30.802498]
+    elif pais == 'EH':
+        return [24.215527, -12.885834]
+    elif pais == 'ER':
+        return [15.179384, 39.782334]
+    elif pais == 'ES':
+        return [40.463667, -3.74922]
+    elif pais == 'ET':
+        return [9.145, 40.489673]
+    elif pais == 'FI':
+        return [61.92411, 25.748151]
+    elif pais == 'FJ':
+        return [-16.578193, 179.414413]
+    elif pais == 'FK':
+        return [-51.796253, -59.523613]
+    elif pais == 'FM':
+        return [7.425554, 150.550812]
+    elif pais == 'FO':
+        return [61.892635, -6.911806]
+    elif pais == 'FR':
+        return [46.227638, 2.213749]
+    elif pais == 'GA':
+        return [-0.803689, 11.609444]
+    elif pais == 'GB':
+        return [55.378051, -3.435973]
+    elif pais == 'GD':
+        return [12.262776, -61.604171]
+    elif pais == 'GE':
+        return [42.315407, 43.356892]
+    elif pais == 'GF':
+        return [3.933889, -53.125782]
+    elif pais == 'GG':
+        return [49.465691, -2.585278]
+    elif pais == 'GH':
+        return [7.946527, -1.023194]
+    elif pais == 'GI':
+        return [36.137741, -5.345374]
+    elif pais == 'GL':
+        return [71.706936, -42.604303]
+    elif pais == 'GM':
+        return [13.443182, -15.310139]
+    elif pais == 'GN':
+        return [9.945587, -9.696645]
+    elif pais == 'GP':
+        return [16.995971, -62.067641]
+    elif pais == 'GQ':
+        return [1.650801, 10.267895]
+    elif pais == 'GR':
+        return [39.074208, 21.824312]
+    elif pais == 'GS':
+        return [-54.429579, -36.587909]
+    elif pais == 'GT':
+        return [15.783471, -90.230759]
+    elif pais == 'GU':
+        return [13.444304, 144.793731]
+    elif pais == 'GW':
+        return [11.803749, -15.180413]
+    elif pais == 'GY':
+        return [4.860416, -58.93018]
+    elif pais == 'GZ':
+        return [31.354676, 34.308825]
+    elif pais == 'HK':
+        return [22.396428, 114.109497]
+    elif pais == 'HM':
+        return [-53.08181, 73.504158]
+    elif pais == 'HN':
+        return [15.199999, -86.241905]
+    elif pais == 'HR':
+        return [45.1, 15.2]
+    elif pais == 'HT':
+        return [18.971187, -72.285215]
+    elif pais == 'HU':
+        return [47.162494, 19.503304]
+    elif pais == 'ID':
+        return [-0.789275, 113.921327]
+    elif pais == 'IE':
+        return [53.41291, -8.24389]
+    elif pais == 'IL':
+        return [31.046051, 34.851612]
+    elif pais == 'IM':
+        return [54.236107, -4.548056]
+    elif pais == 'IN':
+        return [20.593684, 78.96288]
+    elif pais == 'IO':
+        return [-6.343194, 71.876519]
+    elif pais == 'IQ':
+        return [33.223191, 43.679291]
+    elif pais == 'IR':
+        return [32.427908, 53.688046]
+    elif pais == 'IS':
+        return [64.963051, -19.020835]
+    elif pais == 'IT':
+        return [41.87194, 12.56738]
+    elif pais == 'JE':
+        return [49.214439, -2.13125]
+    elif pais == 'JM':
+        return [18.109581, -77.297508]
+    elif pais == 'JO':
+        return [30.585164, 36.238414]
+    elif pais == 'JP':
+        return [36.204824, 138.252924]
+    elif pais == 'KE':
+        return [-0.023559, 37.906193]
+    elif pais == 'KG':
+        return [41.20438, 74.766098]
+    elif pais == 'KH':
+        return [12.565679, 104.990963]
+    elif pais == 'KI':
+        return [-3.370417, -168.734039]
+    elif pais == 'KM':
+        return [-11.875001, 43.872219]
+    elif pais == 'KN':
+        return [17.357822, -62.782998]
+    elif pais == 'KP':
+        return [40.339852, 127.510093]
+    elif pais == 'KR':
+        return [35.907757, 127.766922]
+    elif pais == 'KW':
+        return [29.31166, 47.481766]
+    elif pais == 'KY':
+        return [19.513469, -80.566956]
+    elif pais == 'KZ':
+        return [48.019573, 66.923684]
+    elif pais == 'LA':
+        return [19.85627, 102.495496]
+    elif pais == 'LB':
+        return [33.854721, 35.862285]
+    elif pais == 'LC':
+        return [13.909444, -60.978893]
+    elif pais == 'LI':
+        return [47.166, 9.555373]
+    elif pais == 'LK':
+        return [37.873054, 80.771797]
+    elif pais == 'LR':
+        return [6.428055, -9.429499]
+    elif pais == 'LS':
+        return [-29.609988, 28.233608]
+    elif pais == 'LT':
+        return [55.169438, 23.881275]
+    elif pais == 'LU':
+        return [49.815273, 6.129583]
+    elif pais == 'LV':
+        return [56.879635, 24.603189]
+    elif pais == 'LY':
+        return [26.3351, 17.228331]
+    elif pais == 'MA':
+        return [31.791702, -7.09262]
+    elif pais == 'MC':
+        return [43.750298, 7.412841]
+    elif pais == 'MD':
+        return [47.411631, 28.369885]
+    elif pais == 'ME':
+        return [42.708678, 19.37439]
+    elif pais == 'MG':
+        return [-18.766947, 46.869107]
+    elif pais == 'MH':
+        return [7.131474, 171.184478]
+    elif pais == 'MK':
+        return [41.608635, 21.745275]
+    elif pais == 'ML':
+        return [17.570692, -3.996166]
+    elif pais == 'MM':
+        return [21.913965, 95.956223]
+    elif pais == 'MN':
+        return [46.862496, 103.846656]
+    elif pais == 'MO':
+        return [22.198745, 113.543873]
+    elif pais == 'MP':
+        return [17.33083, 145.38469]
+    elif pais == 'MQ':
+        return [14.641528, -61.024174]
+    elif pais == 'MR':
+        return [21.00789, -10.940835]
+    elif pais == 'MS':
+        return [16.742498, -62.187366]
+    elif pais == 'MT':
+        return [35.937496, 14.375416]
+    elif pais == 'MU':
+        return [20.348404, 57.552152]
+    elif pais == 'MV':
+        return [3.202778, 73.22068]
+    elif pais == 'MW':
+        return [-13.254308, 34.301525]
+    elif pais == 'MX':
+        return [23.634501, -102.552784]
+    elif pais == 'MY':
+        return [4.210484, 101.975766]
+    elif pais == 'MZ':
+        return [-18.665695, 35.529562]
+    elif pais == 'NA':
+        return [-22.95764, 18.49041]
+    elif pais == 'NC':
+        return [-20.904305, 165.618042]
+    elif pais == 'NE':
+        return [17.607789, 8.081666]
+    elif pais == 'NF':
+        return [-29.040835, 167.954712]
+    elif pais == 'NG':
+        return [9.081999, 8.675277]
+    elif pais == 'NI':
+        return [12.865416, -85.207229]
+    elif pais == 'NL':
+        return [52.132633, 5.291266]
+    elif pais == 'NO':
+        return [60.472024, 8.468946]
+    elif pais == 'NP':
+        return [28.394857, 84.124008]
+    elif pais == 'NR':
+        return [-0.522778, 166.931503]
+    elif pais == 'NU':
+        return [-19.054445, -169.867233]
+    elif pais == 'NZ':
+        return [-40.900557, 174.885971]
+    elif pais == 'OM':
+        return [21.512583, 55.923255]
+    elif pais == 'PA':
+        return [8.537981, -80.782127]
+    elif pais == 'PE':
+        return [-9.189967, -75.015152]
+    elif pais == 'PF':
+        return [-17.679742, -149.406843]
+    elif pais == 'PG':
+        return [-6.314993, 143.95555]
+    elif pais == 'PH':
+        return [12.879721, 121.774017]
+    elif pais == 'PK':
+        return [30.375321, 69.345116]
+    elif pais == 'PL':
+        return [51.919438, 19.145136]
+    elif pais == 'PM':
+        return [46.941936, -56.27111]
+    elif pais == 'PN':
+        return [-24.703615, -127.439308]
+    elif pais == 'PR':
+        return [18.220833, -66.590149]
+    elif pais == 'PS':
+        return [31.952162, 35.233154]
+    elif pais == 'PT':
+        return [39.399872, -8.224454]
+    elif pais == 'PW':
+        return [7.51498, 134.58252]
+    elif pais == 'PY':
+        return [-23.442503, -58.443832]
+    elif pais == 'QA':
+        return [25.354826, 51.183884]
+    elif pais == 'RE':
+        return [-21.115141, 55.536384]
+    elif pais == 'RO':
+        return [45.943161, 24.96676]
+    elif pais == 'RS':
+        return [44.016521, 21.005859]
+    elif pais == 'RU':
+        return [61.52401, 105.318756]
+    elif pais == 'RW':
+        return [-1.940278, 29.873888]
+    elif pais == 'SA':
+        return [23.885942, 45.079162]
+    elif pais == 'SB':
+        return [-9.64571, 160.156194]
+    elif pais == 'SC':
+        return [-4.679574, 55.491977]
+    elif pais == 'SD':
+        return [12.862807, 30.217636]
+    elif pais == 'SE':
+        return [60.128161, 18.643501]
+    elif pais == 'SG':
+        return [1.352083, 103.819836]
+    elif pais == 'SH':
+        return [-24.143474, -10.030696]
+    elif pais == 'SI':
+        return [46.151241, 14.995463]
+    elif pais == 'SJ':
+        return [77.553604, 23.670272]
+    elif pais == 'SK':
+        return [48.669026, 19.699024]
+    elif pais == 'SL':
+        return [8.460555, -11.779889]
+    elif pais == 'SM':
+        return [43.94236, 12.457777]
+    elif pais == 'SN':
+        return [14.497401, -14.452362]
+    elif pais == 'SR':
+        return [3.919305, -56.027783]
+    elif pais == 'ST':
+        return [0.18636, 6.613081]
+    elif pais == 'SV':
+        return [13.794185, -88.89653]
+    elif pais == 'SY':
+        return [34.802075, 38.996815]
+    elif pais == 'SZ':
+        return [-26.522503, 31.465866]
+    elif pais == 'TC':
+        return [21.694025, -71.797928]
+    elif pais == 'TD':
+        return [15.454166, 18.732207]
+    elif pais == 'TF':
+        return [-49.280366, 69.348557]
+    elif pais == 'TG':
+        return [8.619543, 0.824782]
+    elif pais == 'TH':
+        return [15.870032, 100.992541]
+    elif pais == 'TJ':
+        return [38.861034, 71.276093]
+    elif pais == 'TK':
+        return [-8.967363, -171.855881]
+    elif pais == 'TL':
+        return [-8.874217, 125.727539]
+    elif pais == 'TM':
+        return [38.969719, 59.556278]
+    elif pais == 'TN':
+        return [33.886917, 9.537499]
+    elif pais == 'TO':
+        return [-21.178986, -175.198242]
+    elif pais == 'TR':
+        return [38.963745, 35.243322]
+    elif pais == 'TT':
+        return [10.691803, -61.222503]
+    elif pais == 'TV':
+        return [-7.109535, 177.64933]
+    elif pais == 'TW':
+        return [23.69781, 120.960515]
+    elif pais == 'TZ':
+        return [-6.369028, 34.888822]
+    elif pais == 'UA':
+        return [48.379433, 31.16558]
+    elif pais == 'UG':
+        return [1.373333, 32.290275]
+    elif pais == 'US':
+        return [37.09024, -95.712891]
+    elif pais == 'UY':
+        return [-32.522779, -55.765835]
+    elif pais == 'UZ':
+        return [41.377491, 64.585262]
+    elif pais == 'VA':
+        return [41.902916, 12.453389]
+    elif pais == 'VC':
+        return [12.984305, -61.287228]
+    elif pais == 'VE':
+        return [6.42375, -66.58973]
+    elif pais == 'VG':
+        return [18.420695, -64.639968]
+    elif pais == 'VI':
+        return [18.335765, -64.896335]
+    elif pais == 'VN':
+        return [14.058324, 108.277199]
+    elif pais == 'VU':
+        return [-15.376706, 166.959158]
+    elif pais == 'WF':
+        return [-13.768752, -177.156097]
+    elif pais == 'WS':
+        return [-13.759029, -172.104629]
+    elif pais == 'XK':
+        return [42.602636, 20.902977]
+    elif pais == 'YE':
+        return [15.552727, 48.516388]
+    elif pais == 'YT':
+        return [-12.8275, 45.166244]
+    elif pais == 'ZA':
+        return [-30.559482, 22.937506]
+    elif pais == 'ZM':
+        return [-13.133897, 27.849332]
+    elif pais == 'ZW':
+        return [-19.015438, 29.154857]
+    else:
+        return [0.0, 0.0]
+
+
+def parametros1(resultadosd):
+    resultadosd_val = []
+    resultadosd_cou = []
+    for facetd in resultadosd['facets']:
+        for termd in resultadosd['facets'][facetd]:
+            resultadosd_val.append(termd['value'])
+            resultadosd_cou.append(termd['count'])
+    return resultadosd_val, resultadosd_cou
+
+
+def parametros2(valores, strr):
+    for val in valores:
+        strr += str(val) + ','
+    strr = strr[0: -1]
+    return strr
+
+
+def parametros4(list_1, list_2):
+    list_3 = []
+    for val in range(len(list_1)):
+        list_3.append(list_1[val] - list_2[val])
+    return list_3
+
+
+def parametros3(cad1_v, cad2_v, cad2_c):
+    cad3_c = [0] * len(cad1_v)
+    for cadena1 in range(len(cad1_v)):
+        for cadena2 in range(len(cad2_v)):
+            if cad1_v[cadena1] == cad2_v[cadena2]:
+                cad3_c[cadena1] =cad2_c[cadena2]
+    return cad3_c
+
+
+def parametros5(resultado):
+    res_5_1 = [k for k in resultado['matches'][0]]
+    res_5_2 = [v for v in resultado['matches'][0].values()]
+    return res_5_1, res_5_2
+
+
+def plt_pie(resd_val, resd_cou, text1):
+    # Grafica de pie
+    plt1.figure()
+    plt1.rcParams['text.color'] = 'white'
+    plt1.pie(resd_cou, labels=resd_val, wedgeprops={'linewidth': 1, 'edgecolor': 'black'}, autopct='%1.1f%%')
+    text_pie = 'pie_' + text1 + '.png'
+    plt1.savefig(text_pie, transparent=True)
+    return text_pie
+
+
+def plt_donut(resd_val, resd_cou, text1):
+    # Grafica de dona
+    plt1.figure()
+    if len(resd_val) > 15:
+        resd_cou = resd_cou[1:15] + [sum(resd_cou[16:])]
+        resd_val = resd_val[1:15] + ['Otros']
+    plt1.rcParams['text.color'] = 'white'
+    plt1.pie(resd_cou, labels=resd_val, wedgeprops={'linewidth': 2, 'edgecolor': 'black'}, autopct='%1.1f%%', textprops={'fontsize':14})
+    my_circle = plt1.Circle((0, 0), 0.6, color='black')
+    p = plt1.gcf()
+    p.gca().add_artist(my_circle)
+    text_donut = 'donut_' + str(text1) + '.png'
+    plt1.savefig(text_donut, transparent=True)
+    return text_donut
+
+
+def plt_map(res_v, res_n, res_c, text):
+    # Grafica del mapa mundial y distribuciÛn de datos en los paises
+    m = folium.Map(no_touch=True, control_scale=True, zoom_start=18, zoom_control=False)
+    for i in range(len(res_c)):
+        folium.Circle(location=coordenadas(res_v[i]), popup=res_n[i], radius=res_c[i], color='crimson',
+                      fill=True, fill_color='crimson').add_to(m)
+    m.save('mymap.html')
+    driver = webdriver.PhantomJS()
+    driver.set_window_size(666, 428)
+    driver.get('file:///root/PycharmProjects/TFM_v1/mymap.html')
+    time.sleep(1)
+    driver.save_screenshot('map' + text + '.png')
+    driver.quit()
+    return 'map' + text + '.png'
+
+
+def plt_bar(bars, height_g, text):
+    # Grafica de barras para un solo grupo de datos
+    plt1.figure()
+    y_pos = np.arange(len(bars))
+    plt1.bar(y_pos, height_g)
+    plt1.xticks(y_pos, bars, rotation=90, color='white', fontsize=10)
+    plt1.yticks(color='white')
+    plt1.subplots_adjust(bottom=0.35, top=0.99)
+    text_graf1_todo = 'bar_' + text + '.png'
+    plt1.savefig(text_graf1_todo, transparent=True)
+    return text_graf1_todo
+
+
+def plt_gbar(bars, height_1, height_2, text):
+    # Grafica de barras para dos grupos de datos
+    plt1.figure()
+    barWidth = 0.25
+    r1 = np.arange(len(height_1))
+    r2 = [x + barWidth for x in r1]
+    plt1.bar(r1, height_1, width=barWidth, edgecolor='Black', label='Sin CVE')
+    plt1.bar(r2, height_2, width=barWidth, edgecolor='Black', label='Con CVE')
+    plt1.xticks([r + barWidth for r in range(len(height_1))], bars, rotation=90, color='white', fontsize=10)
+    plt1.subplots_adjust(bottom=0.35, top=0.99)
+    plt1.xlabel('Group', fontweight='bold')
+    plt1.yticks(color='white')
+    plt1.legend()
+    text_graf1_todo = 'gbar_' + text + '.png'
+    plt1.savefig(text_graf1_todo, transparent=True)
+    return text_graf1_todo
+
+
+def busqueda(text, face):
+    # Busqueda del TOP con Shodan
+    try:
+        result = api.count(query=text, facets=face)
+        val, cou = parametros1(result)
+        return val, cou, result['total']
+    except shodan.exception.APIError as e:
+        popup_1_1 = Popup(title='Error', content=Label(text=e))
+        popup_1_1.open()
+
+
+class FirstPage(GridLayout):
+    def __init__(self, **kwargs):
+        super(FirstPage, self).__init__(**kwargs)
+        self.cols = 1
+        self.padding = 10
+
+        def btnp_1_3(text_1_1):
+            # SelecciÛn de la primera lista desplegable
+            if text_1_1 == 'Protocolo':
+                opciones_1_2 = protocol
+                btn_1_4.text = 'Protocolo'
+            elif text_1_1 == 'Puerto':
+                opciones_1_2 = port
+                btn_1_4.text = 'Puerto'
+            elif text_1_1 == 'Todos':
+                opciones_1_2 = ['Todos']
+                btn_1_4.text = 'Todos'
+            elif text_1_1 == 'Vulnerabilidad':
+                opciones_1_2 = ['CVE']
+                btn_1_4.text = 'Vulnerabilidad'
+                grid_1_1.cols = 4
+                grid_1_1.remove_widget(btn_1_2)
+                global in_1
+                in_1 = TextInput()
+                grid_1_1.add_widget(in_1)
+                grid_1_1.add_widget(btn_1_2)
+
+            if btn_1_5.text != 'Seleccione':
+                drop_1_2.clear_widgets()
+                btn_1_5.text = 'Seleccione'
+            if grid_1_1.cols == 4 and text_1_1 != 'Vulnerabilidad':
+                grid_1_1.remove_widget(in_1)
+                grid_1_1.cols = 3
+
+            for opcion_1_2 in opciones_1_2:
+                btn_1_6 = Button(text=str(opcion_1_2), size_hint_y=None, height=25)
+                btn_1_6.bind(on_press=lambda btn_1_6: drop_1_2.select(btn_1_6.text))
+                btn_1_6.bind(on_release=lambda btn_1_6: btnp_1_6(btn_1_6.text))
+                drop_1_2.add_widget(btn_1_6)
+
+        def btnp_1_6(text_1_2):
+            # SelecciÛn de la segunda lista desplegable
+            btn_1_5.text = text_1_2
+            drop_1_2.dismiss()
+
+        def btnp_1_2(instance):
+            grid_1_2.clear_widgets()
+            # Verificar si entradas son validas
+            if btn_1_4.text == 'Protocolo':
+                text_1_3 = btn_1_5.text
+            elif btn_1_4.text == 'Puerto':
+                text_1_3 = 'port:' + btn_1_5.text
+            if btn_1_4.text != 'Seleccione':
+                label_1_1 = Label(text='[b]Resultados:[/b]', markup=True, size_hint_y=None, height=40)
+                grid_1_2.add_widget(label_1_1)
+
+                if btn_1_4.text == 'Todos':
+                    # Analisis del TOP de vulnerabilidades
+                    grid_1_8_p = GridLayout(cols=1, size_hint_y=None, height=900)
+                    label_1_14 = Label(text='TOP de Vulnerabilidades Conocidas', size_hint_y=None, height=40)
+                    grid_1_8_p.add_widget(label_1_14)
+                    grid_1_8 = GridLayout(cols=2, size_hint_y=None, height=850)
+                    grid_1_8_c = GridLayout(cols=1, size_hint_y=None, height=840)
+                    grid_1_8.add_widget(grid_1_8_c)
+                    text_1_t = parametros2(port, 'port:')
+                    val_1_11, cou_1_11, tot_1_11 = busqueda(text_1_t, [('vuln', 10000)])
+                    if tot_1_11 != 0:
+                        plt_1_7 = plt_bar(val_1_11[0:20], cou_1_11[0:20], 'todos')
+                        ima_1_7 = Image(source=str(plt_1_7), size_hint_x=0.7)
+                        grid_1_8_c.add_widget(ima_1_7)
+                        grid_1_8_1 = GridLayout(cols=2, size_hint_y=None)
+                        grid_1_8_1.bind(minimum_height=grid_1_8_1.setter('height'))
+                        lbt_t_1 = Button(text='Vulneravilidad', size_hint_x=0.6, size_hint_y=None, height=25,
+                                         background_normal='atlas://data/images/defaulttheme/button_pressed')
+                        lbt_t_2 = Button(text='Cantidad', size_hint_x=0.2, size_hint_y=None, height=25,
+                                         background_normal='atlas://data/images/defaulttheme/button_pressed')
+                        grid_1_8_1.add_widget(lbt_t_1)
+                        grid_1_8_1.add_widget(lbt_t_2)
+                        for var_1_11 in range(len(val_1_11)):
+                            btn_1_7 = Button(text=str(val_1_11[var_1_11]), size_hint_x=0.7, size_hint_y=None, height=25)
+                            btn_1_7.bind(on_release=lambda btn_1_7: btnp_1_7(btn_1_7.text))
+                            btn_1_7.font_size = '12sp'
+                            btn_1_7.halign = 'left'
+                            btn_1_7.texture_update()
+                            grid_1_8_1.add_widget(btn_1_7)
+                            label_1_6 = Label(text=str(cou_1_11[var_1_11]), size_hint_x=0.3, size_hint_y=None,
+                                              height=25)
+                            label_1_6.font_size = '12sp'
+                            label_1_6.halign = 'left'
+                            label_1_6.texture_update()
+                            grid_1_8_1.add_widget(label_1_6)
+                        scroll_1_6 = ScrollView(size_hint_x=0.3)
+                        scroll_1_6.add_widget(grid_1_8_1)
+                        grid_1_8.add_widget(scroll_1_6)
+                        grid_1_8_p.add_widget(grid_1_8)
+                        grid_1_2.add_widget(grid_1_8_p)
+                        list_1_1 = []
+                        for var_1_12 in val_1_11:
+                            if int(var_1_12[4:8]) > 0:
+                                list_1_1.append(int(var_1_12[4:8]))
+                        list_1_1 = list(set(list_1_1))
+                        list_1_2 = [0] * len(list_1_1)
+                        for var_1_13 in range(len(val_1_11)):
+                            for var_1_14 in range(len(list_1_1)):
+                                if int(val_1_11[var_1_13][4:8]) == int(list_1_1[var_1_14]):
+                                    list_1_2[var_1_14] += cou_1_11[var_1_13]
+                        plt_1_8 = plt_pie(list_1_1, list_1_2, 'todos_cve')
+                        ima_1_8 = Image(source=str(plt_1_8), size_hint_x=0.7)
+                        label_1_15 = Label(text='DistribuciÛn Temporal de las Vulnerabilidades Conocidas',
+                                           size_hint_y=None, height=40)
+                        grid_1_8_c.add_widget((label_1_15))
+                        grid_1_8_c.add_widget(ima_1_8)
+                    else:
+                        lab_1 = Label(text='No se encontraron resultados.')
+                        grid_1_2.add_widget(lab_1)
+
+                elif btn_1_4.text == 'Vulnerabilidad':
+                    # Analisis por una vulnerabilidad conocida
+                    if len(in_1.text) == 13 or len(in_1.text) == 14:
+                        if in_1.text[0:4] == 'CVE-' and 1999 <= int(in_1.text[4:8]) <= 2020 and in_1.text[8] == '-':
+                            val_1, cou_1, tot_1 = busqueda('vuln:' + in_1.text, [('os', 10)])
+                            if tot_1 != 0:
+                                label_1_1.text = '[b]Resultados:[/b]' + ' Dispositivos encontrados: ' + str(tot_1)
+                                grid_1 = GridLayout(cols=1, size_hint_y=None, height=450)
+                                label_1 = Label(text='Top 10 de Sistemas Operativos con la Vulnerabilidad: '
+                                                     + in_1.text, size_hint_y=None, height=40)
+                                grid_1.add_widget(label_1)
+                                plt_1 = plt_bar(val_1, cou_1, 'cve-os')
+                                ima_1 = Image(source=str(plt_1))
+                                grid_1.add_widget(ima_1)
+                                grid_1_2.add_widget(grid_1)
+                                val_2, cou_2, tot_v_1 = busqueda('vuln:' + in_1.text, [('product', 10)])
+                                grid_2 = GridLayout(cols=1, size_hint_y=None, height=450)
+                                label_2 = Label(text='Top 10 de Productos con la Vulnerabilidad: ' + in_1.text,
+                                                size_hint_y=None, height=40)
+                                grid_2.add_widget(label_2)
+                                plt_2 = plt_bar(val_2, cou_2, 'cve-pro')
+                                ima_2 = Image(source=str(plt_2))
+                                grid_2.add_widget(ima_2)
+                                grid_1_2.add_widget(grid_2)
+                                val_3, cou_3, tot_v_2 = busqueda('vuln:' + in_1.text, [('country', 10)])
+                                grid_3 = GridLayout(cols=1, size_hint_y=None, height=900)
+                                label_3 = Label(text='Top 10 de Paises con la Vulnerabilidad: ' + in_1.text,
+                                                size_hint_y=None, height=40)
+                                grid_3.add_widget(label_3)
+                                pai_3 = paises(val_3)
+                                plt_3 = plt_bar(pai_3, cou_3, 'cve-cou')
+                                ima_3 = Image(source=str(plt_3))
+                                grid_3.add_widget(ima_3)
+                                plt_4 = plt_map(val_3, pai_3, cou_3, 'cve')
+                                ima_4 = Image(source=str(plt_4))
+                                grid_3.add_widget(ima_4)
+                                grid_1_2.add_widget(grid_3)
+
+                                btn_v = Button(text='Buscar', size_hint_y=None, height=40)
+                                btn_v.bind(on_release=btnp_v)
+                                grid_1_2.add_widget(btn_v)
+                            else:
+                                lab_2 = Label(text='No se encontraron resultados.')
+                                grid_1_2.add_widget(lab_2)
+                        else:
+                            lab_3 = Label(text='Vulnerabilidad no valida')
+                            grid_1_2.add_widget(lab_3)
+                    else:
+                        lab_4 = Label(text='Ingrese vulnerabilidad')
+                        grid_1_2.add_widget(lab_4)
+                elif btn_1_4.text != 'Todos':
+                    # Porcentaje de con CVE
+                    grid_1_3_p = GridLayout(cols=1, size_hint_y=None, height=900)
+                    label_1_2 = Label(text='Porcentaje de dispositivos con vulnerabilidades conocidas',
+                                      size_hint_y=None, height=40)
+                    grid_1_3_p.add_widget(label_1_2)
+                    grid_1_3 = GridLayout(cols=2, size_hint_y=None, height=850)
+                    grid_1_3_c = GridLayout(cols=1, size_hint_y=None, height=840)
+                    grid_1_3.add_widget(grid_1_3_c)
+                    val_1_1, cou_1_1, tot_1_1 = busqueda(text_1_3, [('vuln', 50)])
+                    if tot_1_1 != 0:
+                        text_1_4 = parametros2(val_1_1, text_1_3 + ' vuln:')
+                        val_1_2, cou_1_2, tot_1_2 = busqueda(text_1_4, [('vuln', 50)])
+                        if tot_1_2 != 0:
+                            label_1_1.text = '[b]Resultados:[/b]' + ' Dispositivos encontrados: ' + str(tot_1_1) \
+                                             + ', con CVE: ' + str(tot_1_2)
+                            plt_1_1 = plt_pie(['Sin CVE', 'Con CVE'], [tot_1_1 - tot_1_2, tot_1_2], 'pie_gen_cve')
+                            ima_1_1 = Image(source=str(plt_1_1), size_hint_x=0.7)
+                            grid_1_3_c.add_widget(ima_1_1)
+                            grid_1_3_1 = GridLayout(cols=2, size_hint_y=None)
+                            grid_1_3_1.bind(minimum_height=grid_1_3_1.setter('height'))
+                            lbt_v_1 = Button(text='Vulneravilidad', size_hint_x=0.6, size_hint_y=None, height=25,
+                                             background_normal='atlas://data/images/defaulttheme/button_pressed')
+                            lbt_v_2 = Button(text='Cantidad', size_hint_x=0.2, size_hint_y=None, height=25,
+                                             background_normal='atlas://data/images/defaulttheme/button_pressed')
+                            grid_1_3_1.add_widget(lbt_v_1)
+                            grid_1_3_1.add_widget(lbt_v_2)
+                            for var_1_1 in range(len(val_1_1)):
+                                btn_1_7 = Button(text=str(val_1_1[var_1_1]), size_hint_x=0.7, size_hint_y=None,
+                                                 height=25)
+                                btn_1_7.bind(on_release=lambda btn_1_7: btnp_1_7(btn_1_7.text))
+                                btn_1_7.font_size = '12sp'
+                                btn_1_7.halign = 'left'
+                                btn_1_7.texture_update()
+                                grid_1_3_1.add_widget(btn_1_7)
+                                label_1_6 = Label(text=str(cou_1_1[var_1_1]), size_hint_x=0.3, size_hint_y=None,
+                                                  height=25)
+                                label_1_6.font_size = '11sp'
+                                label_1_6.halign = 'left'
+                                label_1_6.texture_update()
+                                grid_1_3_1.add_widget(label_1_6)
+                            scroll_1_2 = ScrollView(size_hint_x=0.3)
+                            scroll_1_2.add_widget(grid_1_3_1)
+                            grid_1_3.add_widget(scroll_1_2)
+                            grid_1_3_p.add_widget(grid_1_3)
+
+                            list_1_3 = []
+                            for var_1_15 in val_1_1:
+                                if int(var_1_15[4:8]) > 0:
+                                    list_1_3.append(int(var_1_15[4:8]))
+                            list_1_3 = list(set(list_1_3))
+                            list_1_4 = [0] * len(list_1_3)
+                            for var_1_16 in range(len(val_1_1)):
+                                for var_1_17 in range(len(list_1_3)):
+                                    if int(val_1_1[var_1_16][4:8]) == int(list_1_3[var_1_17]):
+                                        list_1_4[var_1_17] += cou_1_1[var_1_16]
+                            plt_1_9 = plt_pie(list_1_3, list_1_4, 'dist_cve')
+                            ima_1_9 = Image(source=str(plt_1_9), size_hint_x=0.7)
+                            label_1_16 = Label(text='DistribuciÛn Temporal de las Vulnerabilidades Conocidas',
+                                               size_hint_y=None, height=40)
+                            grid_1_3_c.add_widget(label_1_16)
+                            grid_1_3_c.add_widget(ima_1_9)
+                        else:
+                            lab_5 = Label(text='No se encontraron resultados.')
+                            grid_1_3_p.add_widget(lab_5)
+                        grid_1_2.add_widget(grid_1_3_p)
+
+                        # Paises
+                        grid_1_4_p = GridLayout(cols=1, size_hint_y=None, height=700)
+                        label_1_3 = Label(text='Top de paises con ' + btn_1_4.text + ' ' + btn_1_5.text
+                                               + ' y distribucion de las vulnerabilidades conocidas', size_hint_y=None,
+                                          height=40)
+                        grid_1_4_p.add_widget(label_1_3)
+                        grid_1_4 = GridLayout(cols=2, size_hint_y=None, height=650)
+                        grid_1_4_c = GridLayout(cols=1, size_hint_y=None, height=640, size_hint_x=0.6)
+                        val_1_3, cou_1_3, tot_1_3 = busqueda(text_1_3, [('country', 100)])
+                        val_1_4, cou_1_4, tot_1_4 = busqueda(text_1_4, [('country', 100)])
+                        if tot_1_3 != 0 and tot_1_4 != 0 and len(val_1_4) > 0 and len(val_1_3) > 0:
+                            cou_1_4_f = parametros3(val_1_3, val_1_4, cou_1_4)
+                            val_1_3_f = paises(val_1_3)
+                            cou_1_3_f = parametros4(cou_1_3, cou_1_4_f)
+                            plt_1_2 = plt_gbar(val_1_3_f[0:15], cou_1_3_f[0:15], cou_1_4_f[0:15], 'gen_country')
+                            ima_1_2 = Image(source=str(plt_1_2))
+                            grid_1_4_c.add_widget(ima_1_2)
+                            plt_1_2_m = plt_map(val_1_3[0:15], val_1_3_f[0:15], cou_1_4_f[0:15], 'gen_cou_map')
+                            ima_1_2_m = Image(source=str(plt_1_2_m))
+                            grid_1_4_c.add_widget(ima_1_2_m)
+                            grid_1_4.add_widget(grid_1_4_c)
+                            grid_1_4_1 = GridLayout(cols=3, size_hint_y=None)
+                            grid_1_4_1.bind(minimum_height=grid_1_4_1.setter('height'))
+                            lbt_c_1 = Button(text='Pais', size_hint_x=0.6, size_hint_y=None, height=25,
+                                             background_normal='atlas://data/images/defaulttheme/button_pressed')
+                            lbt_c_2 = Button(text='Total', size_hint_x=0.2, size_hint_y=None, height=25,
+                                             background_normal='atlas://data/images/defaulttheme/button_pressed')
+                            lbt_c_3 = Button(text='Con CVE', size_hint_x=0.2, size_hint_y=None, height=25,
+                                             background_normal='atlas://data/images/defaulttheme/button_pressed')
+                            grid_1_4_1.add_widget(lbt_c_1)
+                            grid_1_4_1.add_widget(lbt_c_2)
+                            grid_1_4_1.add_widget(lbt_c_3)
+                            for var_1_2 in range(len(val_1_3)):
+                                btn_1_8 = Button(text=str(val_1_3_f[var_1_2]), size_hint_x=0.6, size_hint_y=None,
+                                                 height=25, background_down='atlas://data/images/defaulttheme/button')
+                                btn_1_8.font_size = '12sp'
+                                btn_1_8.halign = 'left'
+                                btn_1_8.texture_update()
+                                grid_1_4_1.add_widget(btn_1_8)
+                                label_1_7 = Label(text=str(cou_1_3_f[var_1_2]), size_hint_x=0.2, size_hint_y=None,
+                                                  height=25)
+                                label_1_7.font_size = '12sp'
+                                label_1_7.halign = 'left'
+                                label_1_7.texture_update()
+                                grid_1_4_1.add_widget(label_1_7)
+                                label_1_8 = Label(text=str(cou_1_4_f[var_1_2]), size_hint_x=0.2, size_hint_y=None,
+                                                  height=25)
+                                label_1_8.font_size = '12sp'
+                                label_1_8.halign = 'left'
+                                label_1_8.texture_update()
+                                grid_1_4_1.add_widget(label_1_8)
+                            scroll_1_3 = ScrollView(size_hint_x=0.4)
+                            scroll_1_3.add_widget(grid_1_4_1)
+                            grid_1_4.add_widget(scroll_1_3)
+                            grid_1_4_p.add_widget(grid_1_4)
+                        else:
+                            lab_7 = Label(text='No se encontraron resultados.')
+                            grid_1_4_p.add_widget(lab_7)
+                        grid_1_2.add_widget(grid_1_4_p)
+
+                        # Sistemas Operativos
+                        grid_1_5_p = GridLayout(cols=1, size_hint_y=None, height=450)
+                        label_1_4 = Label(text='Top de sistemas operativos con ' + btn_1_4.text + ' ' + btn_1_5.text
+                                               + ' y distribucion de las vulnerabilidades conocidas', size_hint_y=None,
+                                          height=40)
+                        grid_1_5_p.add_widget(label_1_4)
+                        grid_1_5 = GridLayout(cols=2, size_hint_y=None, height=400)
+                        val_1_5, cou_1_5, tot_1_5 = busqueda(text_1_3, [('os', 100)])
+                        val_1_6, cou_1_6, tot_1_6 = busqueda(text_1_4, [('os', 100)])
+                        if tot_1_5 != 0 and tot_1_6 != 0 and len(val_1_5) > 0 and len(val_1_6) > 0:
+                            cou_1_6_f = parametros3(val_1_5, val_1_6, cou_1_6)
+                            cou_1_5_f = parametros4(cou_1_5, cou_1_6_f)
+                            plt_1_3 = plt_gbar(val_1_5[0:15], cou_1_5_f[0:15], cou_1_6_f[0:15], 'gen_os')
+                            ima_1_3 = Image(source=str(plt_1_3), size_hint_x=0.6)
+                            grid_1_5.add_widget(ima_1_3)
+                            grid_1_5_1 = GridLayout(cols=3, size_hint_y=None)
+                            grid_1_5_1.bind(minimum_height=grid_1_5_1.setter('height'))
+                            lbt_s_1 = Button(text='S.O.', size_hint_x=0.6, size_hint_y=None, height=25,
+                                             background_normal='atlas://data/images/defaulttheme/button_pressed')
+                            lbt_s_2 = Button(text='Total', size_hint_x=0.2, size_hint_y=None, height=25,
+                                             background_normal='atlas://data/images/defaulttheme/button_pressed')
+                            lbt_s_3 = Button(text='Con CVE', size_hint_x=0.2, size_hint_y=None, height=25,
+                                             background_normal='atlas://data/images/defaulttheme/button_pressed')
+                            grid_1_5_1.add_widget(lbt_s_1)
+                            grid_1_5_1.add_widget(lbt_s_2)
+                            grid_1_5_1.add_widget(lbt_s_3)
+                            for var_1_3 in range(len(val_1_5)):
+                                btn_1_9 = Button(text=str(val_1_5[var_1_3]), size_hint_x=0.6, size_hint_y=None,
+                                                 height=25, background_down='atlas://data/images/defaulttheme/button')
+                                btn_1_9.font_size = '12sp'
+                                btn_1_9.halign = 'left'
+                                btn_1_9.texture_update()
+                                grid_1_5_1.add_widget(btn_1_9)
+                                label_1_9 = Label(text=str(cou_1_5_f[var_1_3]), size_hint_x=0.2, size_hint_y=None,
+                                                  height=25)
+                                label_1_9.font_size = '12sp'
+                                label_1_9.halign = 'left'
+                                label_1_9.texture_update()
+                                grid_1_5_1.add_widget(label_1_9)
+                                label_1_10 = Label(text=str(cou_1_6_f[var_1_3]), size_hint_x=0.2, size_hint_y=None,
+                                                   height=25)
+                                label_1_10.font_size = '12sp'
+                                label_1_10.halign = 'left'
+                                label_1_10.texture_update()
+                                grid_1_5_1.add_widget(label_1_10)
+                            scroll_1_4 = ScrollView(size_hint_x=0.4)
+                            scroll_1_4.add_widget(grid_1_5_1)
+                            grid_1_5.add_widget(scroll_1_4)
+                            grid_1_5_p.add_widget(grid_1_5)
+                        else:
+                            lab_8 = Label(text='No se encontraron resultados.')
+                            grid_1_5_p.add_widget(lab_8)
+                        grid_1_2.add_widget(grid_1_5_p)
+
+                        # Productos
+                        grid_1_6_p = GridLayout(cols=1, size_hint_y=None, height=450)
+                        label_1_5 = Label(text='Top de productos con ' + btn_1_4.text + ' ' + btn_1_5.text
+                                               + ' y distribucion de las vulnerabilidades conocidas', size_hint_y=None,
+                                          height=40)
+                        grid_1_6_p.add_widget(label_1_5)
+                        grid_1_6 = GridLayout(cols=2, size_hint_y=None, height=400)
+                        val_1_7, cou_1_7, tot_1_7 = busqueda(text_1_3, [('product', 100)])
+                        val_1_8, cou_1_8, tot_1_8 = busqueda(text_1_4, [('product', 100)])
+                        if tot_1_7 != 0 and tot_1_8 != 0 and len(val_1_7) > 0 and len(val_1_8) > 0:
+                            cou_1_8_f = parametros3(val_1_7, val_1_8, cou_1_8)
+                            cou_1_7_f = parametros4(cou_1_7, cou_1_8_f)
+                            plt_1_4 = plt_gbar(val_1_7[0:10], cou_1_7_f[0:10], cou_1_8_f[0:10], 'gen_product')
+                            ima_1_4 = Image(source=str(plt_1_4), size_hint_x=0.6)
+                            grid_1_6.add_widget(ima_1_4)
+                            grid_1_6_1 = GridLayout(cols=3, size_hint_y=None)
+                            grid_1_6_1.bind(minimum_height=grid_1_6_1.setter('height'))
+                            lbt_p_1 = Button(text='Producto', size_hint_x=0.6, size_hint_y=None, height=25,
+                                             background_normal='atlas://data/images/defaulttheme/button_pressed')
+                            lbt_p_2 = Button(text='Total', size_hint_x=0.2, size_hint_y=None,height=25,
+                                             background_normal='atlas://data/images/defaulttheme/button_pressed')
+                            lbt_p_3 = Button(text='Con CVE', size_hint_x=0.2, size_hint_y=None, height=25,
+                                             background_normal='atlas://data/images/defaulttheme/button_pressed')
+                            grid_1_6_1.add_widget(lbt_p_1)
+                            grid_1_6_1.add_widget(lbt_p_2)
+                            grid_1_6_1.add_widget(lbt_p_3)
+                            for var_1_4 in range(len(val_1_7)):
+                                btn_1_10 = Button(text=str(val_1_7[var_1_4]), size_hint_x=0.6, size_hint_y=None,
+                                                  height=25, background_down='atlas://data/images/defaulttheme/button')
+                                btn_1_10.font_size = '11sp'
+                                btn_1_10.texture_update()
+                                grid_1_6_1.add_widget(btn_1_10)
+                                label_1_11 = Label(text=str(cou_1_7_f[var_1_4]), size_hint_x=0.2, size_hint_y=None,
+                                                   height=25)
+                                label_1_11.font_size = '12sp'
+                                label_1_11.halign = 'left'
+                                label_1_11.texture_update()
+                                grid_1_6_1.add_widget(label_1_11)
+                                label_1_12 = Label(text=str(cou_1_8_f[var_1_4]), size_hint_x=0.2, size_hint_y=None,
+                                                   height=25)
+                                label_1_12.font_size = '12sp'
+                                label_1_12.halign = 'left'
+                                label_1_12.texture_update()
+                                grid_1_6_1.add_widget(label_1_12)
+                            scroll_1_5 = ScrollView(size_hint_x=0.4)
+                            scroll_1_5.add_widget(grid_1_6_1)
+                            grid_1_6.add_widget(scroll_1_5)
+                            grid_1_6_p.add_widget(grid_1_6)
+                        else:
+                            lab_9 = Label(text='No se encontraron resultados.')
+                            grid_1_6_p.add_widget(lab_9)
+                        grid_1_2.add_widget(grid_1_6_p)
+                    else:
+                        lab_6 = Label(text='No se encontraron resultados.')
+                        grid_1_3_p.add_widget(lab_6)
+                        grid_1_2.add_widget(grid_1_3_p)
+
+                    if btn_1_4.text == 'Protocolo':
+                        # Busquedas de exploits
+                        grid_1_7_p = GridLayout(cols=1, size_hint_y=None, height=450)
+                        label_1_13 = Label(text='Exploits conocidos para ' + btn_1_4.text + ' ' + btn_1_5.text
+                                                + ' y la plataforma a la que el exploit apunta', size_hint_y=None,
+                                           height=40)
+                        grid_1_7_p.add_widget(label_1_13)
+                        try:
+                            result_1_9 = api.exploits.count(query=text_1_3, facets=[('source', 5)])
+                        except shodan.exception.APIError as e:
+                            popup_1_2 = Popup(title='Error', content=Label(text=e))
+                            popup_1_2.open()
+                        if result_1_9['total'] != 0:
+                            grid_1_7 = GridLayout(cols=2, size_hint_y=None, height=400)
+                            val_1_9, cou_1_9 = parametros1(result_1_9)
+                            plt_1_5 = plt_donut(val_1_9, cou_1_9, 'exploit')
+                            ima_1_5 = Image(source=str(plt_1_5))
+                            grid_1_7.add_widget(ima_1_5)
+
+                            time.sleep(1)
+                            try:
+                                result_1_10 = api.exploits.count(query=text_1_3, facets=[('platform', 15)])
+                            except shodan.exception.APIError as e:
+                                popup_1_3 = Popup(title='Error', content=Label(text=e))
+                                popup_1_3.open()
+                            val_1_10, cou_1_10 = parametros1(result_1_10)
+                            plt_1_6 = plt_bar(val_1_10, cou_1_10, 'exploit')
+                            ima_1_6 = Image(source=str(plt_1_6))
+                            grid_1_7.add_widget(ima_1_6)
+                            grid_1_7_p.add_widget(grid_1_7)
+                        else:
+                            lab_10 = Label(text='No se encontraron resultados.')
+                            grid_1_7_p.add_widget(lab_10)
+                        grid_1_2.add_widget(grid_1_7_p)
+                        btn_1_4.bind(on_release=drop_1_1.open)
+                        btn_1_5.bind(on_release=drop_1_2.open)
+
+        def btnp_v(instance):
+            # Transiscion a pantalla 3: Detalles de la vulnerabilidad
+            my_app.third_page.search_3_1(in_1.text)
+            my_app.screen_manager.transition.direction = 'left'
+            my_app.screen_manager.current = 'Third'
+
+        def btnp_1_7(text_1_5):
+            # Transiscion a pantalla 3: Detalles de la vulnerabilidad
+            my_app.third_page.search_3_1(text_1_5)
+            my_app.screen_manager.transition.direction = 'left'
+            my_app.screen_manager.current = 'Third'
+
+        grid_1_1 = GridLayout(cols=3, size_hint_y=None, height=40)
+
+        drop_1_1 = DropDown()
+        opciones_1_1 = ['Protocolo', 'Puerto', 'Todos', 'Vulnerabilidad']
+        for opcion_1_1 in opciones_1_1:
+            btn_1_3 = Button(text=opcion_1_1, size_hint_y=None, height=25)
+            btn_1_3.bind(on_press=lambda btn_1_3: drop_1_1.select(btn_1_3.text))
+            btn_1_3.bind(on_release=lambda btn_1_3: btnp_1_3(btn_1_3.text))
+            drop_1_1.add_widget(btn_1_3)
+        btn_1_4 = Button(text='Seleccione')
+        btn_1_4.bind(on_release=drop_1_1.open)
+        grid_1_1.add_widget(btn_1_4)
+
+        drop_1_2 = DropDown()
+        btn_1_5 = Button(text='Seleccione')
+        btn_1_5.bind(on_release=drop_1_2.open)
+        grid_1_1.add_widget(btn_1_5)
+
+        btn_1_2 = Button(text="Ir")
+        btn_1_2.bind(on_press=btnp_1_2)
+        grid_1_1.add_widget(btn_1_2)
+        self.add_widget(grid_1_1)
+
+        grid_1_2 = GridLayout(cols=1, padding=10, spacing=1, size_hint_y=None)
+        grid_1_2.bind(minimum_height=grid_1_2.setter('height'))
+        scroll_1_1 = ScrollView()
+        scroll_1_1.add_widget(grid_1_2)
+        self.add_widget(scroll_1_1)
+
+
+class SecondPage(GridLayout):
+    def __init__(self, **kwargs):
+        super(SecondPage, self).__init__(**kwargs)
+        self.cols = 1
+        self.padding = 10
+
+    def search_2_1(self, cve):
+
+        def btnp_2_5(text_b_1):
+            # SelecciÛn de la lista desplegable de pais
+            btn_2_6.text = text_b_1
+            drop_2_1.dismiss()
+        def btnp_2_7(text_b_2):
+            # SelecciÛn de la lista desplegable de puerto
+            btn_2_8.text = text_b_2
+            drop_2_2.dismiss()
+        def btnp_2_9(text_b_3):
+            # SelecciÛn de la lista desplegable de producto
+            btn_2_10.text = text_b_3
+            drop_2_3.dismiss()
+        def btnp_2_11(text_b_4):
+            # SelecciÛn de la lista desplegable de sistema operativo
+            btn_2_12.text = text_b_4
+            drop_2_4.dismiss()
+
+        def search_2_2(instance):
+            grid_2_4.clear_widgets()
+            x_col = 3
+            x_que = ''
+
+            lbc_1 = Button(text='IP', size_hint_y=None, height=25,
+                           background_normal='atlas://data/images/defaulttheme/button_pressed')
+            grid_2_4.add_widget(lbc_1)
+            if btn_2_8.text == 'Seleccione':
+                lbc_2 = Button(text='Puerto', size_hint_y=None, height=25,
+                               background_normal='atlas://data/images/defaulttheme/button_pressed')
+                grid_2_4.add_widget(lbc_2)
+                x_col += 1
+            else:
+                x_que += ' port:' + btn_2_8.text
+            lbc_3 = Button(text='Mod.', size_hint_y=None, height=25,
+                           background_normal='atlas://data/images/defaulttheme/button_pressed')
+            grid_2_4.add_widget(lbc_3)
+            if btn_2_12.text == 'Seleccione':
+                lbc_5 = Button(text='S.O.', size_hint_y=None, height=25,
+                               background_normal='atlas://data/images/defaulttheme/button_pressed')
+                grid_2_4.add_widget(lbc_5)
+                x_col += 1
+            else:
+                x_que += ' os:' + btn_2_12.text
+            if btn_2_10.text == 'Seleccione':
+                lbc_6 = Button(text='Prod.', size_hint_y=None, height=25,
+                               background_normal='atlas://data/images/defaulttheme/button_pressed')
+                grid_2_4.add_widget(lbc_6)
+                x_col += 1
+            else:
+                x_que += ' product:' + btn_2_10.text
+            lbc_7 = Button(text='Ver.', size_hint_y=None, height=25,
+                           background_normal='atlas://data/images/defaulttheme/button_pressed')
+            grid_2_4.add_widget(lbc_7)
+            grid_2_4.cols = x_col
+
+            try:
+                bus_2 = api.search(query='vulnerability:' + cve + x_que)
+            except shodan.exception.APIError as e:
+                popup_1_7 = Popup(title='Error', content=Label(text=str(e)))
+                popup_1_7.open()
+
+            if bus_2['total'] > 0:
+                for var_p in bus_2['matches']:
+                    lab_ip = Label(text=str(var_p['ip_str']), size_hint_y=None, height=25)
+                    grid_2_4.add_widget(lab_ip)
+                    if btn_2_8.text == 'Seleccione':
+                        lab_port = Label(text=str(var_p['port']), size_hint_y=None, height=25)
+                        grid_2_4.add_widget(lab_port)
+                    if '_shodan' in var_p:
+                        if 'module' in var_p['_shodan']:
+                            lab_mod = Label(text=str(var_p['_shodan']['module']), size_hint_y=None, height=25)
+                        else:
+                            lab_mod = Label(text='-', size_hint_y=None, height=25)
+                    else:
+                        lab_mod = Label(text='-', size_hint_y=None, height=25)
+                    grid_2_4.add_widget(lab_mod)
+                    if btn_2_12.text == 'Seleccione':
+                        if 'os' in var_p:
+                            lab_os = Label(text=str(var_p['os']), size_hint_y=None, height=25)
+                        else:
+                            lab_os = Label(text='-', size_hint_y=None, height=25)
+                        grid_2_4.add_widget(lab_os)
+                    if btn_2_10.text == 'Seleccione':
+                        if 'product' in var_p:
+                            lab_pro = Label(text=str(var_p['product']), size_hint_y=None, height=25)
+                        else:
+                            lab_pro = Label(text='-', size_hint_y=None, height=25)
+                        grid_2_4.add_widget(lab_pro)
+                    if 'version' in var_p:
+                        lab_ver = Label(text=str(var_p['version']), size_hint_y=None, height=25)
+                    else:
+                        lab_ver = Label(text='-', size_hint_y=None, height=25)
+                    grid_2_4.add_widget(lab_ver)
+
+
+        # Busqueda de dispositivos con una vulnerabilidad
+        self.clear_widgets()
+
+        label_2_1 = Label(text='Busqueda de Dispositivos con Vulnerabilidad: ' + cve, size_hint_y=None, height=40)
+        self.add_widget(label_2_1)
+        grid_2_1 = GridLayout(cols=2)
+        self.add_widget(grid_2_1)
+        grid_2_2 = GridLayout(cols=2)
+        grid_2_3 = GridLayout(cols=1, size_hint_x=0.3)
+        btn_2_0 = Button(text='Atras', size_hint_y=None, height=40)
+        btn_2_0.bind(on_press=self.btnp_2_1)
+        grid_2_3.add_widget(btn_2_0)
+        lab_e_1 = Label(text='', size_hint_y=None, height=20)
+        grid_2_3.add_widget(lab_e_1)
+        grid_2_3.add_widget(grid_2_2)
+        grid_2_1.add_widget(grid_2_3)
+
+        btn_2_1 = Label(text='Pais', size_hint_y=None, height=40, size_hint_x=0.35)
+        btn_2_2 = Label(text='Puerto', size_hint_y=None, height=40, size_hint_x=0.35)
+        btn_2_3 = Label(text='Producto', size_hint_y=None, height=40, size_hint_x=0.35)
+        btn_2_4 = Label(text='S.O.', size_hint_y=None, height=40, size_hint_x=0.35)
+
+        try:
+            bus_1 = api.count(query='vuln:' + cve, facets=[('country', 100), ('port', 100), ('product', 100),
+                                                           ('os', 100)])
+        except shodan.exception.APIError as e:
+            popup_1_4 = Popup(title='Error', content=Label(text=str(e)))
+            popup_1_4.open()
+
+        op_cou = []
+        for var_2_1 in bus_1['facets']['country']:
+            op_cou.append(var_2_1['value'])
+        op_pai = paises(op_cou)
+        op_por = []
+        for var_2_2 in bus_1['facets']['port']:
+            op_por.append(var_2_2['value'])
+        op_pro = []
+        for var_2_3 in bus_1['facets']['product']:
+            op_pro.append(var_2_3['value'])
+        op_os = []
+        for var_2_4 in bus_1['facets']['os']:
+            op_os.append(var_2_4['value'])
+
+        drop_2_1 = DropDown()
+        for opcion_2_1 in op_pai:
+            if opcion_2_1 != 'None':
+                btn_2_5 = Button(text=str(opcion_2_1), size_hint_y=None, height=25)
+                btn_2_5.font_size = '11sp'
+                btn_2_5.bind(on_press=lambda btn_2_5: drop_2_1.select(btn_2_5.text))
+                btn_2_5.bind(on_release=lambda btn_2_5: btnp_2_5(btn_2_5.text))
+                drop_2_1.add_widget(btn_2_5)
+        btn_2_6 = Button(text='Seleccione', size_hint_y=None, height=40, size_hint_x=0.65)
+        btn_2_6.bind(on_release=drop_2_1.open)
+        drop_2_2 = DropDown()
+        for opcion_2_2 in op_por:
+            btn_2_7 = Button(text=str(opcion_2_2), size_hint_y=None, height=25)
+            btn_2_7.font_size = '11sp'
+            btn_2_7.bind(on_press=lambda btn_2_7: drop_2_2.select(btn_2_7.text))
+            btn_2_7.bind(on_release=lambda btn_2_7: btnp_2_7(btn_2_7.text))
+            drop_2_2.add_widget(btn_2_7)
+        btn_2_8 = Button(text='Seleccione', size_hint_y=None, height=40, size_hint_x=0.65)
+        btn_2_8.bind(on_release=drop_2_2.open)
+        drop_2_3 = DropDown()
+        for opcion_2_3 in op_pro:
+            btn_2_9 = Button(text=str(opcion_2_3), size_hint_y=None, height=25)
+            btn_2_9.font_size = '11sp'
+            btn_2_9.bind(on_press=lambda btn_2_9:drop_2_3.select(btn_2_9.text))
+            btn_2_9.bind(on_release=lambda btn_2_9: btnp_2_9(btn_2_9.text))
+            drop_2_3.add_widget(btn_2_9)
+        btn_2_10 = Button(text='Seleccione', size_hint_y=None, height=40, size_hint_x=0.65)
+        btn_2_10.bind(on_release=drop_2_3.open)
+        drop_2_4 = DropDown()
+        for opcion_2_4 in op_os:
+            btn_2_11 = Button(text=str(opcion_2_4), size_hint_y=None, height=25)
+            btn_2_11.font_size = '11sp'
+            btn_2_11.bind(on_press=lambda btn_2_11:drop_2_4.select(btn_2_11.text))
+            btn_2_11.bind(on_release=lambda btn_2_11: btnp_2_11(btn_2_11.text))
+            drop_2_4.add_widget(btn_2_11)
+        btn_2_12 = Button(text='Seleccione', size_hint_y=None, height=40, size_hint_x=0.65)
+        btn_2_12.bind(on_release=drop_2_4.open)
+
+        grid_2_2.add_widget(btn_2_1)
+        grid_2_2.add_widget(btn_2_6)
+        grid_2_2.add_widget(btn_2_2)
+        grid_2_2.add_widget(btn_2_8)
+        grid_2_2.add_widget(btn_2_3)
+        grid_2_2.add_widget(btn_2_10)
+        grid_2_2.add_widget(btn_2_4)
+        grid_2_2.add_widget(btn_2_12)
+
+        lab_e_2 = Label(text='', size_hint_y=None, height=20)
+        grid_2_3.add_widget(lab_e_2)
+        btn_2_b = Button(text='Buscar', size_hint_y=None, height=40)
+        btn_2_b.bind(on_press=search_2_2)
+        grid_2_3.add_widget(btn_2_b)
+
+        grid_2_4 = GridLayout(cols=6, padding=10, spacing=1, size_hint_y=None)
+        grid_2_4.bind(minimum_height=grid_2_4.setter('height'))
+        scroll_2_1 = ScrollView(size_hint_x=0.7)
+        scroll_2_1.add_widget(grid_2_4)
+        grid_2_1.add_widget(scroll_2_1)
+
+    def btnp_2_1(self, instance):
+        # Transiscion a pantalla 3: Detalle de la Vulnerabilidad
+        my_app.screen_manager.transition.direction = 'right'
+        my_app.screen_manager.current = 'Third'
+
+
+class ThirdPage(GridLayout):
+    def __init__(self, **kwargs):
+        super(ThirdPage, self).__init__(**kwargs)
+        self.cols = 1
+        self.padding = 10
+
+    def search_3_1(self, text_3_1):
+        def btnp_3_2(instance):
+            # Transiscion a pantalla 2: Busqueda de dispositivos con una vulnerabilidad
+            my_app.second_page.search_2_1(text_3_1)
+            my_app.screen_manager.transition.direction = 'left'
+            my_app.screen_manager.current = 'Second'
+
+        for c in list(self.children):
+            if isinstance(c, GridLayout): self.remove_widget(c)
+
+        try:
+            result_3_1 = api.exploits.search(query=text_3_1)
+        except shodan.exception.APIError as e:
+            popup_1_5 = Popup(title='Error', content=Label(text=e))
+            popup_1_5.open()
+
+        grid_3_1 = GridLayout(cols=3, size_hint_y=None, height=40)
+        btn_3_1 = Button(text="Atras", size_hint_x=0.2)
+        btn_3_1.bind(on_press=self.btnp_3_1)
+        grid_3_1.add_widget(btn_3_1)
+        label_3_1 = Label(text='[b]Vulnerabilidad: [/b]' + text_3_1, size_hint_x=0.6, markup=True)
+        grid_3_1.add_widget(label_3_1)
+        btn_3_2 = Button(text="Buscar", size_hint_x=0.2)
+        btn_3_2.bind(on_press=btnp_3_2)
+        grid_3_1.add_widget(btn_3_2)
+        self.add_widget(grid_3_1)
+        label_v = Label(text='', size_hint_y=None, height=20)
+        self.add_widget(label_v)
+        grid_3_2 = GridLayout(cols=2)
+        self.add_widget(grid_3_2)
+        lbt_3_1 = Button(text='Parametro', size_hint_y=None, height=30,
+                         background_normal='atlas://data/images/defaulttheme/button_pressed')
+        lbt_3_2 = Button(text='Detalle', size_hint_y=None, height=30,
+                         background_normal='atlas://data/images/defaulttheme/button_pressed')
+        grid_3_2.add_widget(lbt_3_1)
+        grid_3_2.add_widget(lbt_3_2)
+        val_3_1, cou_3_1 = parametros5(result_3_1)
+        for var_3_2 in range(3):
+            if var_3_2 <= 1:
+                label_3_2 = Button(text=str(val_3_1[var_3_2]), size_hint_y=None, height=40,
+                                   background_down='atlas://data/images/defaulttheme/button')
+            else:
+                label_3_2 = Button(text=str(val_3_1[var_3_2]), size_hint_y=None,
+                                   background_down='atlas://data/images/defaulttheme/button')
+            grid_3_2.add_widget(label_3_2)
+            label_3_3 = Label(text=str(cou_3_1[var_3_2]), size_hint=(None, None), text_size=(550, None), padding=(3, 3))
+            grid_3_2.add_widget(label_3_3)
+            label_3_3.texture_update()
+            label_3_3.size = label_3_3.texture_size
+            label_3_3.texture_update()
+
+    def btnp_3_1(self, instance):
+        # Transiscion a pantalla 1: Pantalla principal
+        my_app.screen_manager.transition.direction = 'right'
+        my_app.screen_manager.current = 'First'
+
+
+class MyApp(App):
+    def build(self):
+        self.screen_manager = ScreenManager()
+
+        self.first_page = FirstPage()
+        screen_first = Screen(name='First')
+        screen_first.add_widget(self.first_page)
+        self.screen_manager.add_widget(screen_first)
+
+        self.second_page = SecondPage()
+        screen_second = Screen(name='Second')
+        screen_second.add_widget(self.second_page)
+        self.screen_manager.add_widget(screen_second)
+
+        self.third_page = ThirdPage()
+        screen_third = Screen(name='Third')
+        screen_third.add_widget(self.third_page)
+        self.screen_manager.add_widget(screen_third)
+
+        my_app.screen_manager.current = 'First'
+
+        return self.screen_manager
+
+
+if __name__ == "__main__":
+    my_app = MyApp()
+    my_app.run()
